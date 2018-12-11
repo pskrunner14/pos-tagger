@@ -15,12 +15,14 @@ def load_dataset():
 
     # list of sentences that are list of tuples like (<word>, <tag>)
     data = nltk.corpus.brown.tagged_sents(tagset='universal')
-    all_tags = ['#EOS#', '#UNK#', 'ADV', 'NOUN', 'ADP', 'PRON',
+    all_tags = ['#PAD#', '#EOS#', '#UNK#', 'ADV', 'NOUN', 'ADP', 'PRON',
                 'DET', '.', 'PRT', 'VERB', 'X', 'NUM', 'CONJ', 'ADJ']
 
     # convert all words to lower case
     data = np.array([[(word.lower(), tag) for word, tag in sentence]
                      for sentence in data])
+
+    print(f'Brown Corpus dims: {data.shape}')
 
     train_data, test_data = train_test_split(
         data, test_size=0.25, random_state=42)
@@ -32,7 +34,7 @@ def load_dataset():
         word_counts.update(words)
 
     # take the 10000 most common words from the counter to build vocab `all_words`
-    all_words = ['#EOS#', '#UNK#'] + \
+    all_words = ['#PAD#', '#EOS#', '#UNK#'] + \
         list(list(zip(*word_counts.most_common(10000)))[0])
 
     #  measure what fraction of data corpus words are in the dictionary i.e. vocab coverage
